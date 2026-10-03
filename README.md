@@ -1,4 +1,4 @@
-# Aman — Java / C Backend Engineer Portfolio
+# Aman — Java / Backend Engineer Portfolio
 
 ## Stack
 HTML5, custom CSS3, modern Vanilla JavaScript ES6+. No React, Next.js, Tailwind, Bootstrap, CDN, or external framework.
