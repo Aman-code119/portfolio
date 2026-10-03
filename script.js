@@ -50,3 +50,25 @@ document.addEventListener("DOMContentLoaded",function(){
         orbitNodes.forEach(n => n.classList.remove('active'));
     });
 });
+
+/* =======================================
+       SMOOTH SCROLL FIX (No URL Hash Jump)
+       ======================================= */
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            // Default jump aur URL change ko rokta hai
+            e.preventDefault();
+            
+            const targetId = this.getAttribute('href').substring(1);
+            if(targetId === "") return;
+            
+            const targetElement = document.getElementById(targetId);
+            if (targetElement) {
+                // Header ki height (100px) minus karke smooth scroll karta hai
+                window.scrollTo({
+                    top: targetElement.offsetTop - 100, 
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });

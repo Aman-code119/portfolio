@@ -254,10 +254,116 @@ details[open] .blade-toggle::after { content: "[ - ]"; color: var(--green); }
 .contact-links strong { display: block; overflow: hidden; font-size: .68rem; text-overflow: ellipsis; white-space: nowrap; }
 .contact-links>a>span+span { color: var(--green); }
 
-/* ================= FOOTER ================= */
-footer { border-top: 1px solid var(--border); background: rgba(5,7,10,.6); }
-.footer { min-height: 78px; display: flex; align-items: center; justify-content: space-between; color: var(--dim); font: 600 .54rem monospace; padding: 20px 0; }
-.footer span:last-child { display: flex; align-items: center; gap: 8px; }
+/* =======================================
+   FAT FOOTER (REFINED & CENTERED)
+   ======================================= */
+.fat-footer {
+    border-top: 1px solid var(--border) !important;
+    background: rgba(5,7,10,0.8) !important;
+    padding-top: 70px !important;
+}
+
+/* Columns ko center mein group karne ke liye */
+.footer-grid {
+    display: flex !important;
+    justify-content: center !important; 
+    gap: 120px !important; /* Tino columns ke beech exact perfect space */
+    padding-bottom: 50px !important;
+    border-bottom: 1px solid rgba(203, 213, 225, 0.1) !important;
+}
+
+.footer-col {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+    min-width: 140px !important;
+}
+
+/* Headings ko white aur clean kiya, ek chhoti green line ke sath */
+.col-title {
+    color: var(--text) !important;
+    font-family: Inter, system-ui, sans-serif !important;
+    font-weight: 800 !important;
+    font-size: 0.8rem !important;
+    margin-bottom: 8px !important;
+    letter-spacing: 0.1em !important;
+    position: relative !important;
+    padding-bottom: 8px !important;
+}
+
+.col-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 25px;
+    height: 2px;
+    background: var(--green) !important;
+}
+
+/* Links ki styling */
+.footer-col a {
+    color: var(--muted) !important;
+    font-family: monospace !important;
+    font-size: 0.75rem !important;
+    text-decoration: none !important;
+    transition: 0.3s var(--ease) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.cmd-arrow {
+    color: var(--dim) !important;
+    font-weight: bold !important;
+    transition: 0.3s var(--ease) !important;
+}
+
+/* Hover effect */
+.footer-col a:hover {
+    color: var(--text) !important;
+    transform: translateX(6px) !important;
+}
+
+.footer-col a:hover .cmd-arrow {
+    color: var(--green) !important;
+}
+
+/* Bottom Bar */
+.footer-bottom {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 25px 0 !important;
+    font-size: 0.65rem !important;
+    font-family: monospace !important;
+    color: var(--dim) !important;
+}
+
+.sys-status {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    color: var(--steel) !important;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .footer-grid {
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        gap: 40px !important;
+    }
+    .col-title::after {
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+    }
+    .footer-bottom {
+        flex-direction: column !important;
+        gap: 15px !important;
+    }
+}
 
 /* ================= ANIMATIONS & UTILS ================= */
 .reveal { opacity: 0; transform: translateY(28px); transition: opacity .75s var(--ease), transform .75s var(--ease); }
