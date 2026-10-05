@@ -16,9 +16,10 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     if (toggle && menu) {
-        toggle.addEventListener("click", function() {
+       toggle.addEventListener("click", function() {
             const open = menu.classList.toggle("open");
             toggle.setAttribute("aria-expanded", String(open));
+            document.body.style.overflow = open ? "hidden" : ""; // Locks background scroll
         });
         menu.querySelectorAll("a").forEach(a => a.addEventListener("click", closeMenu));
         document.addEventListener("click", e => {
@@ -209,21 +210,23 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    // 8. SYSTEM FEEDBACK MODULE (GLOBAL LIKES VIA FREE API)
+    // 8. SYSTEM FEEDBACK MODULE (GLOBAL LIKES VIA FREE API) - SOLID FIX
     const likeBtn = document.getElementById('like-btn');
     const likeCount = document.getElementById('like-count');
     const likeMsg = document.getElementById('like-msg');
     
     if (likeBtn) {
-        let hasLiked = localStorage.getItem('aman_sys_liked') === 'true';
+        // Nayi key memory cache reset ke liye
+        let hasLiked = localStorage.getItem('aman_final_ping_v2') === 'true';
         
-        // 1. Fetch Initial Global Pings
-        fetch('https://api.counterapi.dev/v1/aman-dev-portfolio/pings')
+        // 1. Initial Load from API
+        fetch('https://api.counterapi.dev/v1/aman_portfolio_global/pings')
             .then(res => res.json())
             .then(data => {
-                likeCount.textContent = data.count || 0;
+                // Fix: Making sure it pulls 'count' and defaults to '0'
+                likeCount.textContent = (data && data.count !== undefined) ? data.count : "0";
             }).catch(() => {
-                likeCount.textContent = "ERR";
+                if(!hasLiked) likeCount.textContent = "0";
             });
 
         if (hasLiked) {
@@ -232,26 +235,31 @@ document.addEventListener("DOMContentLoaded", function() {
             likeMsg.style.color = "var(--green)";
         }
 
-        // 2. Transmit Global Ping on Click
+        // 2. Click Handler
         likeBtn.addEventListener('click', () => {
             if (!hasLiked) {
                 hasLiked = true;
-                localStorage.setItem('aman_sys_liked', 'true');
+                localStorage.setItem('aman_final_ping_v2', 'true');
                 likeBtn.classList.add('liked');
                 likeMsg.textContent = "[ TRANSMITTING ] Sending global pulse...";
                 likeMsg.style.color = "var(--green-soft)";
                 
-                // Temporary instant update for UI feel
-                likeCount.textContent = parseInt(likeCount.textContent || 0) + 1;
+                // Solid UI Fix: Forcefully parse and add 1 immediately so it DOES NOT disappear
+                let currentVal = parseInt(likeCount.textContent) || 0;
+                likeCount.textContent = currentVal + 1;
 
-                fetch('https://api.counterapi.dev/v1/aman-dev-portfolio/pings/up')
+                // Send to API in background
+                fetch('https://api.counterapi.dev/v1/aman_portfolio_global/pings/up')
                     .then(res => res.json())
                     .then(data => {
-                        likeCount.textContent = data.count;
+                        // Double check so if API returns empty, we keep our local addition
+                        if(data && data.count !== undefined) {
+                            likeCount.textContent = data.count;
+                        }
                         likeMsg.textContent = "[ OK ] Global Ping registered securely.";
                         likeMsg.style.color = "var(--green)";
                     }).catch(() => {
-                        likeMsg.textContent = "[ WARN ] Global sync timeout.";
+                        likeMsg.textContent = "[ WARN ] Global sync slow, but saved locally.";
                         likeMsg.style.color = "#eab308";
                     });
             } else {
@@ -260,6 +268,4 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     }
-
-    // Comment logic removed, Giscus will handle it directly via HTML iframe.
 });
